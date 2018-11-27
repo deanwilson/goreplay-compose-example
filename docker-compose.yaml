@@ -1,0 +1,29 @@
+version: "3"
+
+networks:
+  public: {}
+
+services:
+  frontendnginx:
+    image: nginx:1.14-alpine
+    ports:
+      - "8080:80"
+    networks:
+      - public
+
+  backendnginx:
+    image: nginx:1.14-alpine
+    ports:
+      - "8181:80"
+    networks:
+      - public
+
+  goreplay:
+    build:
+      context: ./goreplay
+      dockerfile: Dockerfile-goreplay
+    image: goreplay
+    network_mode: "host"
+    command:
+      - '--input-raw=:8080'
+      - '--output-http=http://127.0.0.1:8181'

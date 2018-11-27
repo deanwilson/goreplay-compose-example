@@ -1,0 +1,14 @@
+# The goreplay image on dockerhub is quite old so use our own
+# based on upstreams
+#  - https://github.com/buger/goreplay/blob/master/Dockerfile
+FROM alpine:3.8
+
+ARG goreplay_version=0.16.1
+ARG goreplay_url=https://github.com/buger/goreplay/releases/download/
+
+RUN apk update && apk add ca-certificates && update-ca-certificates && apk add openssl
+
+RUN wget ${goreplay_url}/v${goreplay_version}/gor_${goreplay_version}_x64.tar.gz -O gor.tar.gz
+
+RUN tar xzf gor.tar.gz
+ENTRYPOINT ["./goreplay"]
